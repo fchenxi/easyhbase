@@ -9,9 +9,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>easyhbase-common</artifactId>
+    <name>easyhbase-common</name>
     <packaging>jar</packaging>
 
-    <name>easyhbase-common</name>
     <url>http://maven.apache.org</url>
 
     <properties>

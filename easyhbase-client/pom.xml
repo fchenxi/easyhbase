@@ -7,11 +7,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>easyhbase-client</artifactId>
+    <name>easyhbase-client</name>
     <packaging>jar</packaging>
 
-    <name>easyhbase-client</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -24,6 +23,7 @@
             <artifactId>easyhbase-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
