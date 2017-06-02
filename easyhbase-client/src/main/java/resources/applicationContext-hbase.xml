@@ -12,7 +12,7 @@
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:hbase.properties</value>
+                <value>classpath:easyhbase-client.properties</value>
             </list>
         </property>
     </bean>

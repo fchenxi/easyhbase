@@ -1,5 +1,8 @@
-package cn.easyhbase.client.hbase;
+package cn.easyhbase.web.dao;
 
+import cn.easyhbase.client.hbase.HBaseTables;
+import cn.easyhbase.client.hbase.HbaseOperations2;
+import cn.easyhbase.client.hbase.RowMapper;
 import cn.easyhbase.client.util.ScanUtils;
 import cn.easyhbase.common.AgentStatType;
 import cn.easyhbase.common.Range;
@@ -10,6 +13,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -17,8 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:applicationContext-hbase.xml")
-public class EasyHBaseClientTest {
+@ContextConfiguration(locations = "classpath:applicationContext-example.xml")
+@Component
+public class EasyHBaseClientExample {
 
     @Autowired
     private HbaseOperations2 hbaseTemplate;
@@ -29,7 +34,6 @@ public class EasyHBaseClientTest {
     private final byte[] COLUMN_FAMILY_NAME = Bytes.toBytes("S");
     private final byte[] QUALIFIER_NAME = Bytes.toBytes("f");
     private static final int AGENT_STAT_VER2_NUM_PARTITIONS = 32;
-
 
     @Test
     public void syncPutTest() {
