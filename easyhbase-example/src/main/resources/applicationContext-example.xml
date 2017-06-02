@@ -12,12 +12,12 @@
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:hbase.properties</value>
+                <value>classpath:easyhbase-example.properties</value>
             </list>
         </property>
     </bean>
-    <context:component-scan base-package="cn.easyhbase.client.hbase,
-                                          cn.easyhbase.common.hbase"/>
+    <context:component-scan base-package="cn.easyhbase.server,
+                                          cn.easyhbase.web"/>
     <mvc:annotation-driven/>
     <bean id="hbaseConfiguration" class="cn.easyhbase.client.hbase.HbaseConfigurationFactoryBean">
         <property name="properties">
