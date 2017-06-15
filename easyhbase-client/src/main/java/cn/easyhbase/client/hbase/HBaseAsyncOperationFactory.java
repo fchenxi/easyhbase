@@ -46,6 +46,7 @@ public class HBaseAsyncOperationFactory {
     public static HBaseAsyncOperation create(Configuration configuration) throws IOException {
         boolean enableAsyncMethod = configuration.getBoolean(ENABLE_ASYNC_METHOD,
                 DEFAULT_ENABLE_ASYNC_METHOD);
+        LOGGER.info("hbase.client.async.enable: " + enableAsyncMethod);
         if (!enableAsyncMethod) {
             return DisabledHBaseAsyncOperation.INSTANCE;
         }
