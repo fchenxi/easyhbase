@@ -3,7 +3,6 @@ package cn.easyhbase.web.dao;
 import cn.easyhbase.client.hbase.HBaseTables;
 import cn.easyhbase.client.hbase.HbaseOperations2;
 import cn.easyhbase.client.hbase.RowMapper;
-import cn.easyhbase.client.util.ScanUtils;
 import cn.easyhbase.common.AgentStatType;
 import cn.easyhbase.common.Range;
 import cn.easyhbase.common.hbase.distributor.RowKeyDistributorByHashPrefix;

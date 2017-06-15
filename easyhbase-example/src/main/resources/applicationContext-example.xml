@@ -8,6 +8,7 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
     <bean id="propertyConfigurer"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
@@ -16,14 +17,28 @@
             </list>
         </property>
     </bean>
-    <context:component-scan base-package="cn.easyhbase.server,
-                                          cn.easyhbase.web"/>
-    <mvc:annotation-driven/>
     <bean id="hbaseConfiguration" class="cn.easyhbase.client.hbase.HbaseConfigurationFactoryBean">
         <property name="properties">
             <props>
+                <!-- zookeeper  -->
                 <prop key="hbase.zookeeper.quorum">${hbase.client.host}</prop>
-                <prop key="hbase.zookeeper.property.clientPort">2181</prop>
+                <prop key="hbase.zookeeper.property.clientPort">${hbase.client.port}</prop>
+                <prop key="zookeeper.znode.parent">${zookeeper.znode.parent:/hbase}</prop>
+
+                <!-- kerberos config  -->
+                <prop key="hadoop.security.authentication">
+                    ${hadoop.security.authentication:kerberos}
+                </prop>
+                <prop key="hbase.security.authentication">
+                    ${hbase.security.authentication:kerberos}
+                </prop>
+                <prop key="kerberos.principal">
+                    ${kerberos.principal:hbase/Slave1.Hadoop@WONHIGH.CN}
+                </prop>
+                <prop key="keytab.file">
+                    ${keytab.file:/data/conf/hadoop/kerberos/keys/hbase.keytab}
+                </prop>
+                <prop key="hbase.rpc.protection">${hbase.rpc.protection:privacy}</prop>
 
                 <!-- hbase default:true -->
                 <prop key="hbase.ipc.client.tcpnodelay">${hbase.ipc.client.tcpnodelay}</prop>
@@ -55,7 +70,6 @@
             </props>
         </property>
     </bean>
-
     <bean id="connectionFactory" class="cn.easyhbase.client.hbase.PooledHTableFactory">
         <constructor-arg ref="hbaseConfiguration"/>
         <constructor-arg value="${hbase.client.thread.max}"/>
@@ -115,4 +129,5 @@
             <constructor-arg name="rowKeyEncoder" ref="agentStatRowKeyEncoder"/>
             <constructor-arg name="rowKeyDistributor" ref="agentStatV2RowKeyDistributor"/>
         </bean>-->
+
 </beans>
