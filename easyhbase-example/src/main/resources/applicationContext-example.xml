@@ -17,6 +17,11 @@
             </list>
         </property>
     </bean>
+    <context:component-scan base-package="cn.easyhbase.client.hbase,
+                                          cn.easyhbase.common.hbase,
+                                          cn.easyhbase.web"/>
+    <mvc:annotation-driven/>
+
     <bean id="hbaseConfiguration" class="cn.easyhbase.client.hbase.HbaseConfigurationFactoryBean">
         <property name="properties">
             <props>
@@ -83,13 +88,28 @@
         <constructor-arg ref="hbaseConfiguration"/>
     </bean>
 
-    <bean id="hbaseTemplate" class="cn.easyhbase.client.hbase.HbaseTemplate2">
+    <bean id="hbaseScanTemplate" class="cn.easyhbase.client.hbase.HbaseTemplate2">
         <property name="configuration" ref="hbaseConfiguration"/>
         <property name="tableFactory" ref="connectionFactory"/>
         <property name="enableParallelScan" value="${hbase.client.parallel.scan.enable:false}"/>
         <property name="maxThreads" value="${hbase.client.parallel.scan.maxthreads:16}"/>
         <property name="maxThreadsPerParallelScan"
                   value="${hbase.client.parallel.scan.maxthreadsperscan:4}"/>
+    </bean>
+
+    <bean id="metricRegistry" class="com.codahale.metrics.MetricRegistry">
+    </bean>
+
+    <bean id="asyncOperationMetrics"
+          class="cn.easyhbase.client.hbase.monitor.HBaseAsyncOperationMetrics">
+        <constructor-arg ref="asyncOperation"/>
+    </bean>
+
+    <bean id="hbaseAsyncTemplate" class="cn.easyhbase.client.hbase.HbaseTemplate2"
+          destroy-method="destroy">
+        <property name="configuration" ref="hbaseConfiguration"/>
+        <property name="tableFactory" ref="connectionFactory"/>
+        <property name="asyncOperation" ref="asyncOperation"/>
     </bean>
 
     <bean id="hBaseAdminTemplate" class="cn.easyhbase.client.hbase.HBaseAdminTemplate"

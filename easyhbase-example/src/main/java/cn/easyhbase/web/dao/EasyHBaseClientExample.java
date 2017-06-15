@@ -25,7 +25,11 @@ import java.util.List;
 public class EasyHBaseClientExample {
 
     @Autowired
-    private HbaseOperations2 hbaseTemplate;
+    private HbaseOperations2 hbaseScanTemplate;
+
+    @Autowired
+    private HbaseOperations2 hbaseAsyncTemplate;
+
 
     @Autowired
     private RowKeyDistributorByHashPrefix baseRowKeyDistributor;
@@ -38,7 +42,7 @@ public class EasyHBaseClientExample {
     public void syncPutTest() {
         Put put = new Put(Bytes.toBytes("put1"));
         put.addColumn(COLUMN_FAMILY_NAME, QUALIFIER_NAME, Bytes.toBytes(String.valueOf("value1")));
-        hbaseTemplate.put(HBaseTables.EASYHBASE, put);
+        hbaseAsyncTemplate.put(HBaseTables.EASYHBASE, put);
     }
 
     @Test
@@ -52,7 +56,7 @@ public class EasyHBaseClientExample {
                 ("asyncValue2")));
         puts.add(put1);
         puts.add(put2);
-        hbaseTemplate.asyncPut(HBaseTables.EASYHBASE, puts);
+        hbaseAsyncTemplate.asyncPut(HBaseTables.EASYHBASE, puts);
     }
 
     @Test
@@ -66,7 +70,7 @@ public class EasyHBaseClientExample {
                 ("asyncValue2")));
         puts.add(put1);
         puts.add(put2);
-        hbaseTemplate.asyncPut(HBaseTables.EASYHBASE, puts);
+        hbaseAsyncTemplate.asyncPut(HBaseTables.EASYHBASE, puts);
     }
 
     @Test
@@ -74,7 +78,7 @@ public class EasyHBaseClientExample {
         Scan scan = this.createScan(null, null, null);
         int resultLimit = 20;
         RowMapper mapper = null;
-        List<List> result = hbaseTemplate.findParallel(HBaseTables.AGENT_STAT_VER2, scan,
+        List<List> result = hbaseAsyncTemplate.findParallel(HBaseTables.AGENT_STAT_VER2, scan,
                 baseRowKeyDistributor, resultLimit, mapper,
                 AGENT_STAT_VER2_NUM_PARTITIONS);
 
