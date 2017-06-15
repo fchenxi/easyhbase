@@ -55,7 +55,7 @@ public class AgentStatMapperV2<T extends AgentStatDataPoint> implements AgentSta
         List<T> dataPoints = new ArrayList<>();
 
         for (Cell cell : result.rawCells()) {
-            if (CellUtil.matchingFamily(cell, HBaseTables.AGENT_STAT_CF_STATISTICS)) {
+            if (CellUtil.matchingFamily(cell, HBaseTables.EASYHBASE_CF)) {
 
                 List<T> candidates = new ArrayList<>();
                 for (T candidate : candidates) {

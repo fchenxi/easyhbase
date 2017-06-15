@@ -34,6 +34,10 @@ public final class HBaseTables {
 
     public static final TableName EASYHBASE = TableName.valueOf("EasyHBase");
 
+    public static final byte[] EASYHBASE_CF = Bytes.toBytes("S");
+    // statistics
+
+
     public static final TableName APPLICATION_TRACE_INDEX = TableName.valueOf
             ("ApplicationTraceIndex");
     public static final byte[] APPLICATION_TRACE_INDEX_CF_TRACE = Bytes.toBytes("I"); //
