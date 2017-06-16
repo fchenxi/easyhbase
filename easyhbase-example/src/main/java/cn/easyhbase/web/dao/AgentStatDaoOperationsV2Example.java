@@ -51,7 +51,7 @@ public class AgentStatDaoOperationsV2Example {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private HbaseOperations2 hbaseOperations2;
+    private HbaseOperations2 hbaseScanTemplate;
 
     @Autowired
     private RowKeyDistributorByHashPrefix baseRowKeyDistributor;
@@ -69,7 +69,7 @@ public class AgentStatDaoOperationsV2Example {
 
         Scan scan = this.createScan(agentStatType, agentId, range);
 
-        List<List<T>> intermediate = hbaseOperations2.findParallel(HBaseTables.AGENT_STAT_VER2,
+        List<List<T>> intermediate = hbaseScanTemplate.findParallel(HBaseTables.AGENT_STAT_VER2,
                 scan, baseRowKeyDistributor, mapper, AGENT_STAT_VER2_NUM_PARTITIONS);
         int expectedSize = (int) (range.getRange() / HBaseTables.AGENT_STAT_TIMESPAN_MS);
         List<T> merged = new ArrayList<>(expectedSize);
@@ -96,7 +96,7 @@ public class AgentStatDaoOperationsV2Example {
         int resultLimit = 1;
         Scan scan = this.createScan(agentStatType, agentId, range, resultLimit);
 
-        List<List<T>> result = hbaseOperations2.findParallel(HBaseTables.AGENT_STAT_VER2, scan,
+        List<List<T>> result = hbaseScanTemplate.findParallel(HBaseTables.AGENT_STAT_VER2, scan,
                 baseRowKeyDistributor, resultLimit, mapper, AGENT_STAT_VER2_NUM_PARTITIONS);
         if (result.isEmpty()) {
             return false;

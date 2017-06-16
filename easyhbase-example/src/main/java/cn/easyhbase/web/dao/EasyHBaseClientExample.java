@@ -9,6 +9,7 @@ import cn.easyhbase.common.hbase.distributor.RowKeyDistributorByHashPrefix;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class EasyHBaseClientExample {
     private HbaseOperations2 hbaseScanTemplate;
 
     @Autowired
-    private HbaseOperations2 hbaseAsyncTemplate;
+    private HbaseOperations2 hbasePutTemplate;
 
 
     @Autowired
@@ -42,7 +43,7 @@ public class EasyHBaseClientExample {
     public void syncPutTest() {
         Put put = new Put(Bytes.toBytes("put1"));
         put.addColumn(COLUMN_FAMILY_NAME, QUALIFIER_NAME, Bytes.toBytes(String.valueOf("value1")));
-        hbaseAsyncTemplate.put(HBaseTables.EASYHBASE, put);
+        hbasePutTemplate.put(HBaseTables.EASYHBASE, put);
     }
 
     @Test
@@ -56,7 +57,7 @@ public class EasyHBaseClientExample {
                 ("asyncValue2")));
         puts.add(put1);
         puts.add(put2);
-        hbaseAsyncTemplate.asyncPut(HBaseTables.EASYHBASE, puts);
+        hbasePutTemplate.asyncPut(HBaseTables.EASYHBASE, puts);
     }
 
     @Test
@@ -70,33 +71,39 @@ public class EasyHBaseClientExample {
                 ("asyncValue2")));
         puts.add(put1);
         puts.add(put2);
-        hbaseAsyncTemplate.asyncPut(HBaseTables.EASYHBASE, puts);
+        hbasePutTemplate.asyncPut(HBaseTables.EASYHBASE, puts);
+    }
+
+    @Test
+    public void existsTest() {
+        Scan scan = this.createScan(null, null, null);
+        int resultLimit = 20;
+        RowMapper mapper = null;
+        List<List> result = hbaseScanTemplate.findParallel(HBaseTables.AGENT_STAT_VER2, scan,
+                baseRowKeyDistributor, resultLimit, mapper,
+                AGENT_STAT_VER2_NUM_PARTITIONS);
+        boolean exists = result.size() > 0;
+        Assert.assertTrue(exists);
+
     }
 
     @Test
     public void distributedScanTest() {
-        Scan scan = this.createScan(null, null, null);
+        Range range = new Range(System.currentTimeMillis(), System.currentTimeMillis() + 100000);
+
+        Scan scan = new Scan();
         int resultLimit = 20;
         RowMapper mapper = null;
-        List<List> result = hbaseAsyncTemplate.findParallel(HBaseTables.AGENT_STAT_VER2, scan,
+        List<List> result = hbaseScanTemplate.findParallel(HBaseTables.AGENT_STAT_VER2, scan,
                 baseRowKeyDistributor, resultLimit, mapper,
                 AGENT_STAT_VER2_NUM_PARTITIONS);
-
+        boolean exists = result.size() > 0;
+        Assert.assertTrue(exists);
     }
 
     // if out of max scan cache size, then how to do it?
-    private Scan createScan(AgentStatType agentStatType, String agentId, Range range) {
+    private Scan createScan(byte[] startRowkey, byte[] stopRowkey,  Range range) {
         long scanRange = range.getTo() - range.getFrom();
-        long expectedNumRows = ((scanRange - 1) / HBaseTables.AGENT_STAT_TIMESPAN_MS) + 1;
-//        if (range.getFrom() != AgentStatUtils.getBaseTimestamp(range.getFrom())) {
-//            expectedNumRows++;
-//        }
-//        if (expectedNumRows > MAX_SCAN_CACHE_SIZE) {
-//            return this.createScan(agentStatType, agentId, range, MAX_SCAN_CACHE_SIZE);
-//        } else {
-//            // expectedNumRows guaranteed to be within integer range at this point
-//            return this.createScan(agentStatType, agentId, range, (int) expectedNumRows);
-//        }
         return new Scan();
     }
 
