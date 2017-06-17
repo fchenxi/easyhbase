@@ -53,9 +53,3 @@ A hbase client reference from [pinpoint](https://github.com/naver/pinpoint.)
         puts.add(put1);
         puts.add(put2);
         hbaseAsyncTemplate.asyncPut(HBaseTables.EASYHBASE, puts);
-<<<<<<< HEAD
-    }
-=======
-    }
-
->>>>>>> 488b3f322d5e1477a68ce784882d01000d2be79d
