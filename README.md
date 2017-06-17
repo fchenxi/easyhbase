@@ -1,15 +1,10 @@
 # easyhbase
-A hbase client reference from pinpoint, see it here, https://github.com/naver/pinpoint.
+A hbase client reference from [pinpoint](https://github.com/naver/pinpoint.)
 
-1. It provide the salted rowkey, see it here, https://sematext.com/blog/2012/04/09/hbasewd-avoid-regionserver-hotspotting-[] despite-writing-records-with-sequential-keys.
+1. It provide the salted rowkey, see it here https://sematext.com/blog/2012/04/09/hbasewd-avoid-regionserver-hotspotting-[] despite-writing-records-with-sequential-keys
 
 2. Example
 
-
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:applicationContext-example.xml")
-@Component
-public class EasyHBaseClientExample {
 
     @Autowired
     private HbaseOperations2 hbaseScanTemplate;
@@ -60,14 +55,3 @@ public class EasyHBaseClientExample {
         hbaseAsyncTemplate.asyncPut(HBaseTables.EASYHBASE, puts);
     }
 
-    @Test
-    public void distributedScanTest() {
-        Scan scan = this.createScan(null, null, null);
-        int resultLimit = 20;
-        RowMapper mapper = null;
-        List<List> result = hbaseAsyncTemplate.findParallel(HBaseTables.AGENT_STAT_VER2, scan,
-                baseRowKeyDistributor, resultLimit, mapper,
-                AGENT_STAT_VER2_NUM_PARTITIONS);
-
-    }
-} 
