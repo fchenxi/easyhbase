@@ -8,18 +8,9 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
-
-    <import resource="easyhbase-default.xml"/>
-
-    <bean id="propertyConfigurer"
-          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath:easyhbase-example.properties</value>
-            </list>
-        </property>
-    </bean>
-    <context:component-scan base-package="cn.easyhbase.web"/>
+    
+    <context:component-scan base-package="cn.easyhbase.client.hbase,
+                                          cn.easyhbase.common.hbase"/>
     <mvc:annotation-driven/>
 
     <bean id="hbaseConfiguration" class="cn.easyhbase.client.hbase.HbaseConfigurationFactoryBean">
@@ -105,7 +96,7 @@
         <constructor-arg ref="asyncOperation"/>
     </bean>
 
-    <bean id="hbaseAsyncTemplate" class="cn.easyhbase.client.hbase.HbaseTemplate2"
+    <bean id="hbasePutTemplate" class="cn.easyhbase.client.hbase.HbaseTemplate2"
           destroy-method="destroy">
         <property name="configuration" ref="hbaseConfiguration"/>
         <property name="tableFactory" ref="connectionFactory"/>
