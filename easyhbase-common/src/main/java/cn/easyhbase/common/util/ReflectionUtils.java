@@ -3,174 +3,155 @@ package cn.easyhbase.common.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 
-/**
- * @usage       Reflect utils
- * @author      tong.cx
- * @version     0.0.1
- * @datetime    2016/3/28 18:42
- * @copyright   wonhigh.cn
- */
 public class ReflectionUtils {
-	private static final Log logger = LogFactory.getLog(ReflectionUtils.class);
 
-	/**
-	 * 直接设置对象属性值,无视private/protected修饰符,不经过setter函数.
-	 */
-	public static void setFieldValue(final Object object, final String fieldName, final Object value) {
-		Field field = getDeclaredField(object, fieldName);
+    private static final Log logger = LogFactory.getLog(ReflectionUtils.class);
 
-		if (field == null)
-			throw new IllegalArgumentException("Could not find field [" + fieldName + "] on target [" + object + "]");
+    public static void setFieldValue(final Object object, final String fieldName, final Object
+            value) {
+        Field field = getDeclaredField(object, fieldName);
 
-		makeAccessible(field);
+        if (field == null)
+            throw new IllegalArgumentException("Could not find field [" + fieldName + "] on " +
+                    "target [" + object + "]");
 
-		try {
-			field.set(object, value);
-		} catch (IllegalAccessException e) {
-			
-		}
-	}
-	
-	/**
-	 * 直接读取对象属性值,无视private/protected修饰符,不经过getter函数.
-	 */
-	public static Object getFieldValue(final Object object, final String fieldName) {
-		Field field = getDeclaredField(object, fieldName);
+        makeAccessible(field);
 
-		if (field == null)
-			throw new IllegalArgumentException("Could not find field [" + fieldName + "] on target [" + object + "]");
+        try {
+            field.set(object, value);
+        } catch (IllegalAccessException e) {
 
-		makeAccessible(field);
+        }
+    }
 
-		Object result = null;
-		try {
-			result = field.get(object);
-		} catch (IllegalAccessException e) {
-			
-		}
-		return result;
-	}
+    public static Object getFieldValue(final Object object, final String fieldName) {
+        Field field = getDeclaredField(object, fieldName);
 
-	/**
-	 * 直接调用对象方法,无视private/protected修饰符.
-	 */
-	public static Object invokeMethod(final Object object, final String methodName, final Class<?>[] parameterTypes,
-			final Object[] parameters) throws InvocationTargetException {
-		Method method = getDeclaredMethod(object, methodName, parameterTypes);
-		if (method == null)
-			throw new IllegalArgumentException("Could not find method [" + methodName + "] on target [" + object + "]");
+        if (field == null)
+            throw new IllegalArgumentException("Could not find field [" + fieldName + "] on " +
+                    "target [" + object + "]");
 
-		method.setAccessible(true);
+        makeAccessible(field);
 
-		try {
-			return method.invoke(object, parameters);
-		} catch (IllegalAccessException e) {
-			
-		}
+        Object result = null;
+        try {
+            result = field.get(object);
+        } catch (IllegalAccessException e) {
 
-		return null;
-	}
+        }
+        return result;
+    }
 
-	/**
-	 * 循环向上转型,获取对象的DeclaredField.
-	 */
-	protected static Field getDeclaredField(final Object object, final String fieldName) {		
-		for (Class<?> superClass = object.getClass(); superClass != Object.class; superClass = superClass
-				.getSuperclass()) {
-			try {
-				return superClass.getDeclaredField(fieldName);
-			} catch (NoSuchFieldException e) {
-			}
-		}
-		return null;
-	}
+    public static Object invokeMethod(final Object object, final String methodName, final
+    Class<?>[] parameterTypes,
+                                      final Object[] parameters) throws InvocationTargetException {
+        Method method = getDeclaredMethod(object, methodName, parameterTypes);
+        if (method == null)
+            throw new IllegalArgumentException("Could not find method [" + methodName + "] on " +
+                    "target [" + object + "]");
 
-	/**
-	 * 循环向上转型,获取对象的DeclaredField.
-	 */
-	protected static void makeAccessible(final Field field) {
-		if (!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers())) {
-			field.setAccessible(true);
-		}
-	}
+        method.setAccessible(true);
 
-	/**
-	 * 循环向上转型,获取对象的DeclaredMethod.
-	 */
-	protected static Method getDeclaredMethod(Object object, String methodName, Class<?>[] parameterTypes) {
-		for (Class<?> superClass = object.getClass(); superClass != Object.class; superClass = superClass
-				.getSuperclass()) {
-			try {
-				return superClass.getDeclaredMethod(methodName, parameterTypes);
-			} catch (NoSuchMethodException e) {
+        try {
+            return method.invoke(object, parameters);
+        } catch (IllegalAccessException e) {
 
-			}
-		}
-		return null;
-	}
+        }
 
-	/**
-	 * 通过反射,获得Class定义中声明的父类的泛型参数的类型.
-	 * eg.
-	 * public UserDao extends HibernateDao<User>
-	 *
-	 * @param clazz The class to introspect
-	 * @return the first generic declaration, or Object.class if cannot be determined
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> Class<T> getSuperClassGenricType(final Class clazz) {
-		return getSuperClassGenricType(clazz, 0);
-	}
+        return null;
+    }
 
-	/**
-	 * 通过反射,获得Class定义中声明的父类的泛型参数的类型.
-	 * eg.
-	 * public UserDao extends HibernateDao<User>
-	 *
-	 * @param clazz The class to introspect
-	 * @return the first generic declaration, or Object.class if cannot be determined
-	 */
-	@SuppressWarnings("unchecked")
-	public static Class getSuperClassGenricType(final Class clazz, final int index) {
+    protected static Field getDeclaredField(final Object object, final String fieldName) {
+        for (Class<?> superClass = object.getClass(); superClass != Object.class; superClass =
+                superClass
+                .getSuperclass()) {
+            try {
+                return superClass.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException e) {
+            }
+        }
+        return null;
+    }
 
-		Type genType = clazz.getGenericSuperclass();
+    protected static void makeAccessible(final Field field) {
+        if (!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field
+                .getDeclaringClass().getModifiers())) {
+            field.setAccessible(true);
+        }
+    }
 
-		if (!(genType instanceof ParameterizedType)) {
-			logger.warn(clazz.getSimpleName() + "'s superclass not ParameterizedType");
-			return Object.class;
-		}
+    protected static Method getDeclaredMethod(Object object, String methodName, Class<?>[]
+            parameterTypes) {
+        for (Class<?> superClass = object.getClass(); superClass != Object.class; superClass =
+                superClass
+                .getSuperclass()) {
+            try {
+                return superClass.getDeclaredMethod(methodName, parameterTypes);
+            } catch (NoSuchMethodException e) {
 
-		Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
+            }
+        }
+        return null;
+    }
 
-		if (index >= params.length || index < 0) {
-			logger.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: "
-					+ params.length);
-			return Object.class;
-		}
-		if (!(params[index] instanceof Class)) {
-			logger.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
-			return Object.class;
-		}
+    /**
+     * ????,??Class????????????????.
+     * eg.
+     * public UserDao extends HibernateDao<User>
+     *
+     * @param clazz The class to introspect
+     * @return the first generic declaration, or Object.class if cannot be determined
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> getSuperClassGenricType(final Class clazz) {
+        return getSuperClassGenricType(clazz, 0);
+    }
 
-		return (Class) params[index];
-	}
+    /**
+     * ????,??Class????????????????.
+     * eg.
+     * public UserDao extends HibernateDao<User>
+     *
+     * @param clazz The class to introspect
+     * @return the first generic declaration, or Object.class if cannot be determined
+     */
+    @SuppressWarnings("unchecked")
+    public static Class getSuperClassGenricType(final Class clazz, final int index) {
 
-	
-	/**
-	 * 将反射时的checked exception转换为unchecked exception.
-	 */
-	public static IllegalArgumentException convertToUncheckedException(Exception e) {
-		if (e instanceof IllegalAccessException || e instanceof IllegalArgumentException
-				|| e instanceof NoSuchMethodException)
-			return new IllegalArgumentException("Refelction Exception.", e);
-		else
-			return new IllegalArgumentException(e);
-	}
+        Type genType = clazz.getGenericSuperclass();
+
+        if (!(genType instanceof ParameterizedType)) {
+            logger.warn(clazz.getSimpleName() + "'s superclass not ParameterizedType");
+            return Object.class;
+        }
+
+        Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
+
+        if (index >= params.length || index < 0) {
+            logger.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s " +
+                    "Parameterized Type: "
+                    + params.length);
+            return Object.class;
+        }
+        if (!(params[index] instanceof Class)) {
+            logger.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
+            return Object.class;
+        }
+
+        return (Class) params[index];
+    }
+
+
+    /**
+     * ?????checked exception???unchecked exception.
+     */
+    public static IllegalArgumentException convertToUncheckedException(Exception e) {
+        if (e instanceof IllegalAccessException || e instanceof IllegalArgumentException
+                || e instanceof NoSuchMethodException)
+            return new IllegalArgumentException("Refelction Exception.", e);
+        else
+            return new IllegalArgumentException(e);
+    }
 }
