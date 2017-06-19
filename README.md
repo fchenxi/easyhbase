@@ -1,11 +1,10 @@
 # easyhbase
 A hbase client reference from [pinpoint](https://github.com/naver/pinpoint.).
+It provides the salted rowkey, see it here https://sematext.com/blog/2012/04/09/hbasewd-avoid-regionserver-hotspotting-[] despite-writing-records-with-sequential-keys.
 
-1. It provides the salted rowkey, see it here https://sematext.com/blog/2012/04/09/hbasewd-avoid-regionserver-hotspotting-[] despite-writing-records-with-sequential-keys.
+Examples
 
-2. Examples
-
-2.1 syncPut & asyncPut example
+1. syncPut & asyncPut example
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @ContextConfiguration(locations = "classpath:applicationContext-example.xml")
@@ -62,7 +61,7 @@ A hbase client reference from [pinpoint](https://github.com/naver/pinpoint.).
 
 } 
 
-2.2 scan example
+2. scan example
 
     @Test
     public void distributedScanTest() {
