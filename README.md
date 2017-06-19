@@ -1,6 +1,6 @@
 # easyhbase
-A hbase client reference from [pinpoint](https://github.com/naver/pinpoint.),
-and it provide the salted rowkey, see it here, https://sematext.com/blog/2012/04/09/hbasewd-avoid-regionserver-hotspotting-[] despite-writing-records-with-sequential-keys.
+A hbase client reference from [pinpoint](https://github.com/naver/pinpoint.).
+It provide the salted rowkey solution by [HBaseWD](https://github.com/sematext/HBaseWD). Also,you can see [HBASE-11682](https://issues.apache.org/jira/browse/HBASE-11682) for salt and hotspot in detail.
 
 Examples
 
