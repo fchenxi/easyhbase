@@ -44,7 +44,7 @@ public class LimitRowMapperResultsExtractor<T> implements ResultsExtractor<List<
     public void setLimit(int limit) {
         this.limit = limit;
     }
-    
+
     /**
      * Create a new RowMapperResultSetExtractor.
      *

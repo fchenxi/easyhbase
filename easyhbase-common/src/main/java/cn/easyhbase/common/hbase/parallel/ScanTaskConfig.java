@@ -39,11 +39,15 @@ public class ScanTaskConfig {
     private final AbstractRowKeyDistributor rowKeyDistributor;
     private final int scanTaskQueueSize;
 
-    public ScanTaskConfig(TableName tableName, HbaseAccessor hbaseAccessor, AbstractRowKeyDistributor rowKeyDistributor, int scanCaching) {
-        this(tableName, hbaseAccessor.getConfiguration(), hbaseAccessor.getCharset(), hbaseAccessor.getTableFactory(), rowKeyDistributor, scanCaching);
+    public ScanTaskConfig(TableName tableName, HbaseAccessor hbaseAccessor,
+                          AbstractRowKeyDistributor rowKeyDistributor, int scanCaching) {
+        this(tableName, hbaseAccessor.getConfiguration(), hbaseAccessor.getCharset(),
+                hbaseAccessor.getTableFactory(), rowKeyDistributor, scanCaching);
     }
 
-    public ScanTaskConfig(TableName tableName, Configuration configuration, Charset charset, TableFactory tableFactory, AbstractRowKeyDistributor rowKeyDistributor, int scanCaching) {
+    public ScanTaskConfig(TableName tableName, Configuration configuration, Charset charset,
+                          TableFactory tableFactory, AbstractRowKeyDistributor rowKeyDistributor,
+                          int scanCaching) {
         if (tableName == null) {
             throw new NullPointerException("No table specified");
         }

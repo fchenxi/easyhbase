@@ -22,15 +22,15 @@
     <context:component-scan base-package="cn.easyhbase.web"/>
     <mvc:annotation-driven/>
 
-    <bean id="hbaseConfiguration" class="cn.easyhbase.client.hbase.HbaseConfigurationFactoryBean">
+    <!--<bean id="hbaseConfiguration" class="cn.easyhbase.client.hbase.HbaseConfigurationFactoryBean">
         <property name="properties">
             <props>
-                <!-- zookeeper  -->
+                &lt;!&ndash; zookeeper  &ndash;&gt;
                 <prop key="hbase.zookeeper.quorum">${hbase.client.host}</prop>
                 <prop key="hbase.zookeeper.property.clientPort">${hbase.client.port}</prop>
                 <prop key="zookeeper.znode.parent">${zookeeper.znode.parent:/hbase}</prop>
 
-                <!-- kerberos config  -->
+                &lt;!&ndash; kerberos config  &ndash;&gt;
                 <prop key="hadoop.security.authentication">
                     ${hadoop.security.authentication:simple}
                 </prop>
@@ -45,23 +45,23 @@
                 </prop>
                 <prop key="hbase.rpc.protection">${hbase.rpc.protection:privacy}</prop>
 
-                <!-- hbase default:true -->
+                &lt;!&ndash; hbase default:true &ndash;&gt;
                 <prop key="hbase.ipc.client.tcpnodelay">${hbase.ipc.client.tcpnodelay}</prop>
-                <!-- hbase default:60000 -->
+                &lt;!&ndash; hbase default:60000 &ndash;&gt;
                 <prop key="hbase.rpc.timeout">${hbase.rpc.timeout}</prop>
-                <!-- hbase default:Integer.MAX_VALUE -->
+                &lt;!&ndash; hbase default:Integer.MAX_VALUE &ndash;&gt;
                 <prop key="hbase.client.operation.timeout">${hbase.client.operation.timeout}</prop>
 
-                <!-- hbase socket read timeout. default: 200000-->
+                &lt;!&ndash; hbase socket read timeout. default: 200000&ndash;&gt;
                 <prop key="hbase.ipc.client.socket.timeout.read">
                     ${hbase.ipc.client.socket.timeout.read}
                 </prop>
-                <!-- socket write timeout. hbase default: 600000-->
+                &lt;!&ndash; socket write timeout. hbase default: 600000&ndash;&gt;
                 <prop key="hbase.ipc.client.socket.timeout.write">
                     ${hbase.ipc.client.socket.timeout.write}
                 </prop>
 
-                <!-- hbase async put operation. -->
+                &lt;!&ndash; hbase async put operation. &ndash;&gt;
                 <prop key="hbase.client.async.enable">${hbase.client.async.enable:false}</prop>
                 <prop key="hbase.client.async.in.queuesize">
                     ${hbase.client.async.in.queuesize:10000}
@@ -129,5 +129,5 @@
         <constructor-arg type="int" value="0"/>
         <constructor-arg type="int" value="33"/>
         <constructor-arg type="int" value="64"/>
-    </bean>
+    </bean>-->
 </beans>

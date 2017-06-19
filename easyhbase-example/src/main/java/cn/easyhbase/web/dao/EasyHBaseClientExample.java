@@ -1,11 +1,12 @@
 package cn.easyhbase.web.dao;
 
-import cn.easyhbase.client.hbase.HBaseTables;
+import cn.easyhbase.HBaseTables;
 import cn.easyhbase.client.hbase.HbaseOperations2;
 import cn.easyhbase.client.hbase.RowMapper;
-import cn.easyhbase.common.AgentStatType;
 import cn.easyhbase.common.Range;
 import cn.easyhbase.common.hbase.distributor.RowKeyDistributorByHashPrefix;
+import cn.easyhbase.server.bo.BaseDataPoint;
+import cn.easyhbase.web.mapper.EasyHBaseMapperV2;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -76,10 +77,10 @@ public class EasyHBaseClientExample {
 
     @Test
     public void existsTest() {
-        Scan scan = this.createScan(null, null, null);
+        Scan scan = new Scan();
         int resultLimit = 20;
-        RowMapper mapper = null;
-        List<List> result = hbaseScanTemplate.findParallel(HBaseTables.AGENT_STAT_VER2, scan,
+        RowMapper mapper = new EasyHBaseMapperV2();
+        List<List> result = hbaseScanTemplate.findParallel(HBaseTables.EASYHBASE, scan,
                 baseRowKeyDistributor, resultLimit, mapper,
                 AGENT_STAT_VER2_NUM_PARTITIONS);
         boolean exists = result.size() > 0;
@@ -90,19 +91,34 @@ public class EasyHBaseClientExample {
     @Test
     public void distributedScanTest() {
         Range range = new Range(System.currentTimeMillis(), System.currentTimeMillis() + 100000);
-
         Scan scan = new Scan();
-        int resultLimit = 20;
-        RowMapper mapper = null;
-        List<List> result = hbaseScanTemplate.findParallel(HBaseTables.AGENT_STAT_VER2, scan,
-                baseRowKeyDistributor, resultLimit, mapper,
+        RowMapper mapper = new EasyHBaseMapperV2();
+        List<BaseDataPoint> results = hbaseScanTemplate.findParallel(HBaseTables.EASYHBASE,
+                scan,
+                baseRowKeyDistributor, mapper,
                 AGENT_STAT_VER2_NUM_PARTITIONS);
-        boolean exists = result.size() > 0;
-        Assert.assertTrue(exists);
+        for (BaseDataPoint baseDataPoint : results) {
+            System.out.println(baseDataPoint.toString());
+        }
+    }
+
+    @Test
+    public void distributedLimitedScanTest() {
+        Range range = new Range(System.currentTimeMillis(), System.currentTimeMillis() + 100000);
+        Scan scan = new Scan();
+        int resultLimit = 3;
+        RowMapper mapper = new EasyHBaseMapperV2();
+        List<BaseDataPoint> results = hbaseScanTemplate.findParallel(HBaseTables.EASYHBASE,
+                scan,
+                baseRowKeyDistributor,resultLimit, mapper,
+                AGENT_STAT_VER2_NUM_PARTITIONS);
+        for (BaseDataPoint baseDataPoint : results) {
+            System.out.println(baseDataPoint.toString());
+        }
     }
 
     // if out of max scan cache size, then how to do it?
-    private Scan createScan(byte[] startRowkey, byte[] stopRowkey,  Range range) {
+    private Scan createScan(byte[] startRowkey, byte[] stopRowkey, Range range) {
         long scanRange = range.getTo() - range.getFrom();
         return new Scan();
     }

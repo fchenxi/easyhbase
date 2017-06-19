@@ -63,6 +63,9 @@
                 <prop key="hbase.client.max.retries.in.queue">
                     ${hbase.client.async.max.retries.in.queue:10}
                 </prop>
+
+                <!-- hbase client cache -->
+                <prop key="hbase.client.scanner.caching">${hbase.client.scanner.caching:1000}</prop>
             </props>
         </property>
     </bean>

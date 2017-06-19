@@ -17,12 +17,10 @@
 package cn.easyhbase.web.mapper;
 
 import cn.easyhbase.client.hbase.RowMapper;
-import cn.easyhbase.server.bo.AgentStatDataPoint;
+import cn.easyhbase.server.bo.BaseDataPoint;
 
 import java.util.List;
 
-/**
- * @author HyunGil Jeong
- */
-public interface AgentStatMapper<T extends AgentStatDataPoint> extends RowMapper<List<T>> {
+
+public interface EasyHBaseMapper<T extends BaseDataPoint> extends RowMapper<List<T>> {
 }

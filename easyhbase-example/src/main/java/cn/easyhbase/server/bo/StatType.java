@@ -16,10 +16,7 @@
 
 package cn.easyhbase.server.bo;
 
-/**
- * @author HyunGil Jeong
- */
-public enum AgentStatType {
+public enum StatType {
     UNKNOWN(0, "Unknown"),
     JVM_GC(1, "JVM GC"),
     JVM_GC_DETAILED(2, "JVM GC Detailed"),
@@ -32,7 +29,7 @@ public enum AgentStatType {
     private final byte typeCode;
     private final String name;
 
-    AgentStatType(int typeCode, String name) {
+    StatType(int typeCode, String name) {
         if (typeCode < 0 || typeCode > 255) {
             throw new IllegalArgumentException("type code out of range (0~255)");
         }
@@ -57,8 +54,8 @@ public enum AgentStatType {
         return this.name;
     }
 
-    public static AgentStatType fromTypeCode(byte typeCode) {
-        for (AgentStatType agentStatType : AgentStatType.values()) {
+    public static StatType fromTypeCode(byte typeCode) {
+        for (StatType agentStatType : StatType.values()) {
             if (agentStatType.typeCode == typeCode) {
                 return agentStatType;
             }

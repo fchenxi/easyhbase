@@ -15,6 +15,7 @@
  */
 
 package cn.easyhbase.common.hbase.parallel;
+
 import cn.easyhbase.common.hbase.HbaseAccessor;
 import cn.easyhbase.common.hbase.distributor.AbstractRowKeyDistributor;
 import org.apache.hadoop.hbase.TableName;
@@ -39,7 +40,10 @@ public class ParallelResultScanner implements ResultScanner {
     private final Result[] nextResults;
     private Result next = null;
 
-    public ParallelResultScanner(TableName tableName, HbaseAccessor hbaseAccessor, ExecutorService executor, Scan originalScan, AbstractRowKeyDistributor keyDistributor, int numParallelThreads) throws IOException {
+    public ParallelResultScanner(TableName tableName, HbaseAccessor hbaseAccessor,
+                                 ExecutorService executor, Scan originalScan,
+                                 AbstractRowKeyDistributor keyDistributor, int
+                                         numParallelThreads) throws IOException {
         if (hbaseAccessor == null) {
             throw new NullPointerException("hbaseAccessor must not be null");
         }
@@ -54,7 +58,8 @@ public class ParallelResultScanner implements ResultScanner {
         }
         this.keyDistributor = keyDistributor;
 
-        final ScanTaskConfig scanTaskConfig = new ScanTaskConfig(tableName, hbaseAccessor, keyDistributor, originalScan.getCaching());
+        final ScanTaskConfig scanTaskConfig = new ScanTaskConfig(tableName, hbaseAccessor,
+                keyDistributor, originalScan.getCaching());
         final Scan[] splitScans = splitScans(originalScan);
 
         this.scanTasks = createScanTasks(scanTaskConfig, splitScans, numParallelThreads);
@@ -73,7 +78,8 @@ public class ParallelResultScanner implements ResultScanner {
         return scans;
     }
 
-    private List<ScanTask> createScanTasks(ScanTaskConfig scanTaskConfig, Scan[] splitScans, int numParallelThreads) {
+    private List<ScanTask> createScanTasks(ScanTaskConfig scanTaskConfig, Scan[] splitScans, int
+            numParallelThreads) {
         if (splitScans.length <= numParallelThreads) {
             List<ScanTask> scanTasks = new ArrayList<>(splitScans.length);
             for (Scan scan : splitScans) {
@@ -81,7 +87,8 @@ public class ParallelResultScanner implements ResultScanner {
             }
             return scanTasks;
         } else {
-            int maxIndividualScans = (splitScans.length + (numParallelThreads - 1)) / numParallelThreads;
+            int maxIndividualScans = (splitScans.length + (numParallelThreads - 1)) /
+                    numParallelThreads;
             List<List<Scan>> scanDistributions = new ArrayList<>(numParallelThreads);
             for (int i = 0; i < numParallelThreads; ++i) {
                 scanDistributions.add(new ArrayList<Scan>(maxIndividualScans));
@@ -91,7 +98,8 @@ public class ParallelResultScanner implements ResultScanner {
             }
             List<ScanTask> scanTasks = new ArrayList<>(numParallelThreads);
             for (List<Scan> scanDistribution : scanDistributions) {
-                Scan[] scansForSingleTask = scanDistribution.toArray(new Scan[scanDistribution.size()]);
+                Scan[] scansForSingleTask = scanDistribution.toArray(new Scan[scanDistribution
+                        .size()]);
                 scanTasks.add(new ScanTask(scanTaskConfig, scansForSingleTask));
             }
             return scanTasks;
@@ -134,7 +142,8 @@ public class ParallelResultScanner implements ResultScanner {
                     continue;
                 }
             }
-            if (result == null || Bytes.compareTo(keyDistributor.getOriginalKey(nextResults[i].getRow()),
+            if (result == null || Bytes.compareTo(keyDistributor.getOriginalKey(nextResults[i]
+                            .getRow()),
                     keyDistributor.getOriginalKey(result.getRow())) < 0) {
                 result = nextResults[i];
                 indexOfResultToUse = i;
