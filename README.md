@@ -66,7 +66,6 @@ A hbase client reference from [pinpoint](https://github.com/naver/pinpoint.).
 
     @Test
     public void distributedScanTest() {
-        Range range = new Range(System.currentTimeMillis(), System.currentTimeMillis() + 100000);
         Scan scan = new Scan();
         RowMapper mapper = new EasyHBaseMapperV2();
         List<BaseDataPoint> results = hbaseScanTemplate.findParallel(HBaseTables.EASYHBASE,
