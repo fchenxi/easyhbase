@@ -32,18 +32,17 @@ public class EasyHBaseClientExample {
     @Autowired
     private HbaseOperations2 hbasePutTemplate;
 
-
     @Autowired
     private RowKeyDistributorByHashPrefix baseRowKeyDistributor;
 
-    private final byte[] COLUMN_FAMILY_NAME = Bytes.toBytes("S");
     private final byte[] QUALIFIER_NAME = Bytes.toBytes("f");
-    private static final int AGENT_STAT_VER2_NUM_PARTITIONS = 32;
+    private static final int EASYHBASE_NUM_PARTITIONS = 32;
 
     @Test
     public void syncPutTest() {
         Put put = new Put(Bytes.toBytes("put1"));
-        put.addColumn(COLUMN_FAMILY_NAME, QUALIFIER_NAME, Bytes.toBytes(String.valueOf("value1")));
+        put.addColumn(HBaseTables.EASYHBASE_CF, QUALIFIER_NAME, Bytes.toBytes(String.valueOf
+                ("value1")));
         hbasePutTemplate.put(HBaseTables.EASYHBASE, put);
     }
 
@@ -52,9 +51,9 @@ public class EasyHBaseClientExample {
         List<Put> puts = new ArrayList<>();
         Put put1 = new Put(Bytes.toBytes("asyncPut1"));
         Put put2 = new Put(Bytes.toBytes("asyncPut2"));
-        put1.addColumn(COLUMN_FAMILY_NAME, QUALIFIER_NAME, Bytes.toBytes(String.valueOf
+        put1.addColumn(HBaseTables.EASYHBASE_CF, QUALIFIER_NAME, Bytes.toBytes(String.valueOf
                 ("asncyValue1")));
-        put2.addColumn(COLUMN_FAMILY_NAME, QUALIFIER_NAME, Bytes.toBytes(String.valueOf
+        put2.addColumn(HBaseTables.EASYHBASE_CF, QUALIFIER_NAME, Bytes.toBytes(String.valueOf
                 ("asyncValue2")));
         puts.add(put1);
         puts.add(put2);
@@ -64,12 +63,14 @@ public class EasyHBaseClientExample {
     @Test
     public void asyncDistributedPutTest() {
         List<Put> puts = new ArrayList<>();
-        Put put1 = new Put(baseRowKeyDistributor.getDistributedKey(Bytes.toBytes("asyncPut1")));
-        Put put2 = new Put(baseRowKeyDistributor.getDistributedKey(Bytes.toBytes("asyncPut2")));
-        put1.addColumn(COLUMN_FAMILY_NAME, QUALIFIER_NAME, Bytes.toBytes(String.valueOf
-                ("asncyValue1")));
-        put2.addColumn(COLUMN_FAMILY_NAME, QUALIFIER_NAME, Bytes.toBytes(String.valueOf
-                ("asyncValue2")));
+        Put put1 = new Put(baseRowKeyDistributor.getDistributedKey(Bytes.toBytes
+                ("asyncDistributedPut1")));
+        Put put2 = new Put(baseRowKeyDistributor.getDistributedKey(Bytes.toBytes
+                ("asyncDistributedPut2")));
+        put1.addColumn(HBaseTables.EASYHBASE_CF, QUALIFIER_NAME, Bytes.toBytes(String.valueOf
+                ("asyncDistributedValue1")));
+        put2.addColumn(HBaseTables.EASYHBASE_CF, QUALIFIER_NAME, Bytes.toBytes(String.valueOf
+                ("asyncDistributedValue2")));
         puts.add(put1);
         puts.add(put2);
         hbasePutTemplate.asyncPut(HBaseTables.EASYHBASE, puts);
@@ -82,21 +83,19 @@ public class EasyHBaseClientExample {
         RowMapper mapper = new EasyHBaseMapperV2();
         List<List> result = hbaseScanTemplate.findParallel(HBaseTables.EASYHBASE, scan,
                 baseRowKeyDistributor, resultLimit, mapper,
-                AGENT_STAT_VER2_NUM_PARTITIONS);
+                EASYHBASE_NUM_PARTITIONS);
         boolean exists = result.size() > 0;
         Assert.assertTrue(exists);
-
     }
 
     @Test
     public void distributedScanTest() {
-        Range range = new Range(System.currentTimeMillis(), System.currentTimeMillis() + 100000);
         Scan scan = new Scan();
         RowMapper mapper = new EasyHBaseMapperV2();
         List<BaseDataPoint> results = hbaseScanTemplate.findParallel(HBaseTables.EASYHBASE,
                 scan,
                 baseRowKeyDistributor, mapper,
-                AGENT_STAT_VER2_NUM_PARTITIONS);
+                EASYHBASE_NUM_PARTITIONS);
         for (BaseDataPoint baseDataPoint : results) {
             System.out.println(baseDataPoint.toString());
         }
@@ -104,23 +103,16 @@ public class EasyHBaseClientExample {
 
     @Test
     public void distributedLimitedScanTest() {
-        Range range = new Range(System.currentTimeMillis(), System.currentTimeMillis() + 100000);
         Scan scan = new Scan();
         int resultLimit = 3;
         RowMapper mapper = new EasyHBaseMapperV2();
         List<BaseDataPoint> results = hbaseScanTemplate.findParallel(HBaseTables.EASYHBASE,
                 scan,
-                baseRowKeyDistributor,resultLimit, mapper,
-                AGENT_STAT_VER2_NUM_PARTITIONS);
+                baseRowKeyDistributor, resultLimit, mapper,
+                EASYHBASE_NUM_PARTITIONS);
         for (BaseDataPoint baseDataPoint : results) {
             System.out.println(baseDataPoint.toString());
         }
-    }
-
-    // if out of max scan cache size, then how to do it?
-    private Scan createScan(byte[] startRowkey, byte[] stopRowkey, Range range) {
-        long scanRange = range.getTo() - range.getFrom();
-        return new Scan();
     }
 
 }

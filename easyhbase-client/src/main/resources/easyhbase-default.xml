@@ -29,10 +29,10 @@
                     ${hbase.security.authentication:simple}
                 </prop>
                 <prop key="kerberos.principal">
-                    ${kerberos.principal}
+                    ${kerberos.principal:""}
                 </prop>
                 <prop key="keytab.file">
-                    ${keytab.file}
+                    ${keytab.file:""}
                 </prop>
                 <prop key="hbase.rpc.protection">${hbase.rpc.protection:privacy}</prop>
 
@@ -113,15 +113,4 @@
 
     <bean class="org.apache.hadoop.util.ShutdownHookManagerProxy"/>
 
-    <bean id="baseRowKeyDistributor"
-          class="cn.easyhbase.common.hbase.distributor.RowKeyDistributorByHashPrefix">
-        <constructor-arg ref="baseRangeHasher"/>
-    </bean>
-
-    <bean id="baseRangeHasher"
-          class="cn.easyhbase.common.hbase.distributor.RangeOneByteSimpleHash">
-        <constructor-arg type="int" value="0"/>
-        <constructor-arg type="int" value="33"/>
-        <constructor-arg type="int" value="64"/>
-    </bean>
 </beans>
