@@ -1,18 +1,22 @@
 package cn.easyhbase.client.hbase;
 
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Properties;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Properties;
+
 public class HbaseConfigurationFactoryBean
         implements InitializingBean, FactoryBean<Configuration> {
+
+    private Logger LOG = LoggerFactory.getLogger(HbaseConfigurationFactoryBean.class);
     private Configuration configuration;
     private Configuration hadoopConfig;
     private Properties properties;
@@ -35,9 +39,13 @@ public class HbaseConfigurationFactoryBean
         if (("kerberos".equalsIgnoreCase(this.configuration.get(HBASE_SECURITY_AUTHENTICATION)))) {
             UserGroupInformation.setConfiguration(this.configuration);
             try {
-                UserGroupInformation.loginUserFromKeytab(this.configuration.get("kerberos" +
-                        ".principal"), this.configuration.get("keytab.file"));
+                UserGroupInformation.loginUserFromKeytab(this.configuration.get(PRINCIPAL), this
+                        .configuration.get(KEYTAB_PATH));
+                LOG.info(" user " + this.configuration.get(PRINCIPAL) + " login successfully, " +
+                        "keytab: " + this
+                        .configuration.get(KEYTAB_PATH));
             } catch (IOException e) {
+                LOG.info(" user " + PRINCIPAL + " login failed");
                 throw new RuntimeException(e);
             }
         }

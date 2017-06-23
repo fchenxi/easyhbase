@@ -8,7 +8,7 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
-    
+
     <context:component-scan base-package="cn.easyhbase.client.hbase,
                                           cn.easyhbase.common.hbase"/>
     <mvc:annotation-driven/>
@@ -35,6 +35,12 @@
                     ${keytab.file:""}
                 </prop>
                 <prop key="hbase.rpc.protection">${hbase.rpc.protection:privacy}</prop>
+                <prop key="hbase.regionserver.kerberos.principal">${hbase.regionserver.kerberos.principal:""}
+                </prop>
+                <prop key="hbase.master.kerberos.principal">${hbase.master.kerberos.principal:""}
+                </prop>
+                <prop key="hbase.thrift.kerberos.principal">${hbase.thrift.kerberos.principal:""}</prop>
+
 
                 <!-- hbase default:true -->
                 <prop key="hbase.ipc.client.tcpnodelay">${hbase.ipc.client.tcpnodelay}</prop>
