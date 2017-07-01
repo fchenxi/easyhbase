@@ -1,6 +1,7 @@
 # easyhbase
-A hbase client reference from [pinpoint](https://github.com/naver/pinpoint.).
-It provide the salted rowkey solution by [HBaseWD](https://github.com/sematext/HBaseWD). Also,you can see [HBASE-11682](https://issues.apache.org/jira/browse/HBASE-11682) for salt and hotspot in detail.
+A hbase client based on [pinpoint](https://github.com/naver/pinpoint.).
+It provides the salted rowkey solution by [HBaseWD](https://github.com/sematext/HBaseWD). Also,you can see [HBASE-11682](https://issues.apache.org/jira/browse/HBASE-11682) for salt and hotspot in detail.
+It privodes async put,parallel scan,kerberos authorization etc.  
 
 Examples
 
